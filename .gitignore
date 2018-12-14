@@ -9,6 +9,7 @@
 *.pdb
 *.tlh
 *.tli
+*.sln
 Debug/
 *.vcxproj.filters
 *.vcxproj.user
@@ -18,4 +19,6 @@ Release/
 *.exp
 *.dmp
 *.aps
+winsock/Debug
+winsock/Release
 
