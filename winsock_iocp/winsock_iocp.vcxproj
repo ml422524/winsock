@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{5F747424-0A4D-4B7D-ACDA-BCE6C9DAB420}</ProjectGuid>
+    <ProjectGuid>{FF578FCA-CC0D-4606-905C-C1DA612919CA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>winsock</RootNamespace>
+    <RootNamespace>winsock_iocp</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
