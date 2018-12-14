@@ -9,7 +9,6 @@
 *.pdb
 *.tlh
 *.tli
-*.sln
 Debug/
 *.vcxproj.filters
 *.vcxproj.user
