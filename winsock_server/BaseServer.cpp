@@ -1,6 +1,6 @@
 #include "BaseErrorCode.h"
 #include "BaseServer.h"
-#include <ctime>
+#include "log.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -8,7 +8,7 @@ int BaseServer::Init(const char *fileName)
 {
 	WSADATA wsd;
 	if (NO_ERROR != WSAStartup(MAKEWORD(2, 2), &wsd))
-	{	
+	{			
 		return EXE_FAIL;
 	}
 	//
@@ -23,7 +23,7 @@ int BaseServer::Init(const char *fileName)
 	GetSystemInfo(&systemInfo_);
 	for (int i = 0; i < 2 * systemInfo_.dwNumberOfProcessors; ++i)
 	{ 
-		threads_.push_back(std::move(std::thread(&BaseServer::ServerWorkerThread, this)));
+		workerThreads_.push_back(std::move(std::thread(&BaseServer::ServerWorkerThread, this)));
 	}
 
 	//
@@ -58,6 +58,22 @@ int BaseServer::Init(const char *fileName)
 	}
 
 	//
+	acceptThreads_.push_back(std::move(std::thread(&BaseServer::AcceptThread, this)));
+
+	//
+	return EXE_SUCCESS;
+}
+
+int BaseServer::Deinit()
+{
+	WSACleanup();
+	return EXE_SUCCESS;
+}
+
+//
+void BaseServer::AcceptThread()
+{
+	//
 	while (TRUE)
 	{
 		PER_HANDLE_DATA *PerHdlData = NULL;
@@ -71,7 +87,7 @@ int BaseServer::Init(const char *fileName)
 		memcpy(&PerHdlData->clientAddr, &saRemote, remoteLen);
 
 		//
-		CreateIoCompletionPort((HANDLE)accept, CompletionPort_,	(DWORD)PerHdlData, 0);
+		CreateIoCompletionPort((HANDLE)accept, CompletionPort_, (DWORD)PerHdlData, 0);
 
 		//
 		LPPER_IO_OPERATE_DATA pPerIoData = (LPPER_IO_OPERATE_DATA)GlobalAlloc(GPTR,
@@ -82,12 +98,6 @@ int BaseServer::Init(const char *fileName)
 		WSARecv(accept, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
 			&pPerIoData->overlapped, NULL);
 	}
-
-	//
-	WSACleanup();
-
-	//
-	return EXE_SUCCESS;
 }
 
 //
@@ -121,7 +131,8 @@ void BaseServer::ServerWorkerThread()
 			//
 			if (pPerIoData->operationType == RECV_POSTED)
 			{
-				printf("%d, close socket %d.\n", (int)std::time(nullptr), pPerHdlData->socket);
+				LOG_INFO("socket: " << pPerHdlData->socket << " closed.");
+				//
 				closesocket(pPerHdlData->socket);
 				GlobalFree(pPerHdlData);
 				GlobalFree(pPerIoData);
@@ -132,13 +143,15 @@ void BaseServer::ServerWorkerThread()
 		//
 		if (pPerIoData->operationType == RECV_POSTED)
 		{
-			// deal the data received
-			// pPerIoData->buf
-			printf("Recv DATA: %s.\n", pPerIoData->buf);
-
-			//
+			// deal the data received.
+			
+			// re-post a recv operate.
 			WSARecv(pPerHdlData->socket, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
 				&pPerIoData->overlapped, NULL);
+
+			//
+			LOG_INFO("re-post a WSARecv.");
+
 		}
 	}
 }
