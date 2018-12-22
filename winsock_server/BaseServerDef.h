@@ -22,6 +22,7 @@ typedef struct _PER_IO_OPERATE_DATA{
 	char buf[DATA_BUFSIZE];
 	int  bufLen;
 	DWORD bytesRecv;
+	DWORD bytesSend;
 	DWORD flags;
 	int operationType;
 }PER_IO_OPERATE_DATA, *LPPER_IO_OPERATE_DATA;
