@@ -16,4 +16,5 @@ public:
 
 //
 #define LOG_INFO(logEvent)  LOG4CPLUS_INFO(Log::root, logEvent)
+#define LOG_ERROR(logEvent) LOG4CPLUS_ERROR(Log::root, logEvent)
 #define LOG_FATAL(logEvent) LOG4CPLUS_FATAL(Log::root, logEvent)
