@@ -20,4 +20,5 @@ Release/
 *.aps
 winsock/Debug
 winsock/Release
+*.log
 
