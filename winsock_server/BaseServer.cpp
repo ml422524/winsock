@@ -145,13 +145,25 @@ void BaseServer::ServerWorkerThread()
 		{
 			// deal the data received.
 			
-			// re-post a recv operate.
+			//
+			pPerIoData->operationType = SEND_POSTED;
+			const char *rsp = "hello client";
+			memcpy(pPerIoData->buf, rsp, strlen(rsp) + 1);
+			WSASend(pPerHdlData->socket, &pPerIoData->dataBuf, 1, &pPerIoData->bytesSend, 0,
+				&pPerIoData->overlapped, NULL);
+			LOG_INFO("post a WSASend operation.");
+		}
+		else if (pPerIoData->operationType == SEND_POSTED)
+		{
+			// 
+			pPerIoData->operationType = RECV_POSTED;
 			WSARecv(pPerHdlData->socket, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
 				&pPerIoData->overlapped, NULL);
-
-			//
-			LOG_INFO("re-post a WSARecv.");
-
+			LOG_INFO("post a WSARecv operation.");
+		}
+		else
+		{
+			LOG_ERROR("Unknown operation.");
 		}
 	}
 }
