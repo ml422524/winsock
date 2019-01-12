@@ -86,6 +86,7 @@
     <ClInclude Include="BaseServer.h" />
     <ClInclude Include="BaseServerDef.h" />
     <ClInclude Include="log.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseServer.cpp" />

@@ -1,11 +1,13 @@
 #pragma once
 
 #include "BaseServerDef.h"
+#include "utils.h"
 #include <vector>
 #include <thread>
 
 class BaseServer{
 public:
+	//
 	int Init(const char *fileName);
 	int Deinit();
 
@@ -13,7 +15,12 @@ public:
 	void ServerWorkerThread();
 private:
 	//
+	int OnReceiveData(LPPER_HANDLE_DATA);
+
+	//
 	int PostAccept();
+	int PostRecvOnAccept(LPPER_IO_OPERATE_DATA);
+	int PostRecvOnRecv(LPPER_IO_OPERATE_DATA);
 
 	//
 	HANDLE CompletionPort_;

@@ -85,47 +85,60 @@ int BaseServer::Init(const char *fileName)
 	if (iResult == SOCKET_ERROR)
 	{
 		LOG_ERROR("WSAIoctl failed with error: " << WSAGetLastError());
-		return EXE_FAIL;
-	}
-	
-	// Create an accepting socket
-	//SOCKET acceptSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	SOCKET acceptSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
-	if (acceptSocket == INVALID_SOCKET) {
-		LOG_ERROR("Create accept socket failed with error: " << WSAGetLastError());
 		closesocket(listenSocket_);
 		WSACleanup();
 		return EXE_FAIL;
 	}
-	LOG_DEBUG("create socket: " << acceptSocket);
+	
+	//
+	if (EXE_SUCCESS != PostAccept())
+	{
+		LOG_ERROR("post an accept operation failed.");
+		closesocket(listenSocket_);
+		WSACleanup();
+		return EXE_FAIL;
+	}
 
-    //
-	LPPER_IO_OPERATE_DATA pPerIoData = (LPPER_IO_OPERATE_DATA)GlobalAlloc(GPTR,
-		sizeof(PER_IO_OPERATE_DATA));
-	pPerIoData->dataBuf.buf = pPerIoData->buf;
-	pPerIoData->dataBuf.len = DATA_BUFSIZE;
-	pPerIoData->bufLen = DATA_BUFSIZE;
-	pPerIoData->operationType = ACCEPT_POSTED;
-	pPerIoData->socketClient = acceptSocket;
 
 	//
-	BOOL bRetVal = lpfnAcceptEx_(listenSocket_, acceptSocket, pPerIoData->buf,
-		pPerIoData->bufLen - ((sizeof(sockaddr_in) + 16) * 2), // the actual receive data at the beginning of the buffer
-		sizeof(sockaddr_in) + 16,
-		sizeof(sockaddr_in) + 16,
-		&dwBytes, &pPerIoData->overlapped);
-	if (bRetVal == FALSE)
-	{
-		if (ERROR_IO_PENDING != WSAGetLastError())
-		{
-			LOG_ERROR("AcceptEx failed with error: " << WSAGetLastError());
-			closesocket(acceptSocket);
-			closesocket(listenSocket_);
-			WSACleanup();
-			GlobalFree(pPerIoData);
-			return EXE_FAIL;
-		}
-	}
+	//// Create an accepting socket
+	////SOCKET acceptSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	//SOCKET acceptSocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
+	//if (acceptSocket == INVALID_SOCKET) {
+	//	LOG_ERROR("Create accept socket failed with error: " << WSAGetLastError());
+	//	closesocket(listenSocket_);
+	//	WSACleanup();
+	//	return EXE_FAIL;
+	//}
+	//LOG_DEBUG("create socket: " << acceptSocket);
+
+ //   //
+	//LPPER_IO_OPERATE_DATA pPerIoData = (LPPER_IO_OPERATE_DATA)GlobalAlloc(GPTR,
+	//	sizeof(PER_IO_OPERATE_DATA));
+	//pPerIoData->dataBuf.buf = pPerIoData->buf;
+	//pPerIoData->dataBuf.len = DATA_BUFSIZE;
+	//pPerIoData->bufLen = DATA_BUFSIZE;
+	//pPerIoData->operationType = ACCEPT_POSTED;
+	//pPerIoData->socketClient = acceptSocket;
+
+	////
+	//BOOL bRetVal = lpfnAcceptEx_(listenSocket_, acceptSocket, pPerIoData->buf,
+	//	pPerIoData->bufLen - ((sizeof(sockaddr_in) + 16) * 2), // the actual receive data at the beginning of the buffer
+	//	sizeof(sockaddr_in) + 16,
+	//	sizeof(sockaddr_in) + 16,
+	//	&dwBytes, &pPerIoData->overlapped);
+	//if (bRetVal == FALSE)
+	//{
+	//	if (ERROR_IO_PENDING != WSAGetLastError())
+	//	{
+	//		LOG_ERROR("AcceptEx failed with error: " << WSAGetLastError());
+	//		closesocket(acceptSocket);
+	//		closesocket(listenSocket_);
+	//		WSACleanup();
+	//		GlobalFree(pPerIoData);
+	//		return EXE_FAIL;
+	//	}
+	//}
 
 	// 经试验，以下CreateIoCompletionPort调用可有可无，
 	// 完成端口总是可以收到连接。
@@ -155,7 +168,7 @@ void BaseServer::ServerWorkerThread()
 	LPPER_IO_OPERATE_DATA pPerIoData;
 	DWORD sendBytes, recvBytes;
 	DWORD flags;
-	int ret;
+	BOOL ret;
 	while (TRUE)
 	{
 		ret = GetQueuedCompletionStatus(
@@ -166,7 +179,7 @@ void BaseServer::ServerWorkerThread()
 			INFINITE);
 
 		//
-		if (0 == ret)
+		if (FALSE == ret)
 		{
 			LOG_ERROR("GetQueuedCompletionStatus return 0, error: " << WSAGetLastError());
 			continue;
@@ -176,7 +189,7 @@ void BaseServer::ServerWorkerThread()
 		if (bytesTransferred == 0)
 		{
 			//
-			if (pPerIoData->operationType == RECV_POSTED)
+			if (pPerIoData->operationType == RECV_OPE || pPerIoData->operationType == SEND_OPE)
 			{
 				LOG_INFO("socket: " << pPerHdlData->socketClient << " closed.");
 				closesocket(pPerHdlData->socketClient);
@@ -187,47 +200,30 @@ void BaseServer::ServerWorkerThread()
 		}
 
 		//
-		if (pPerIoData->operationType == ACCEPT_POSTED)
+		if (pPerIoData->operationType == ACCEPT_OPE)
 		{
 			//
 			SOCKADDR_IN* remote = NULL;
 			SOCKADDR_IN* local = NULL;
 			int remoteLen = 0;
 			int localLen = 0;
-			lpfnGetAcceptExSockAddrs_(pPerIoData->buf, pPerIoData->bufLen - (sizeof(SOCKADDR_IN) + 16) * 2,
+			lpfnGetAcceptExSockAddrs_(pPerIoData->buf, 
+				0, //pPerIoData->bufLen - (sizeof(SOCKADDR_IN) + 16) * 2,
 				sizeof(SOCKADDR_IN) + 16, sizeof(SOCKADDR_IN) + 16,
 				(LPSOCKADDR*)&local, &localLen, (LPSOCKADDR*)&remote, &remoteLen);
 			//
 			LOG_DEBUG("client <" << inet_ntoa(remote->sin_addr) << ":" << ntohs(remote->sin_port)
-				<< "> come in, data: " << pPerIoData->buf << ", socket: " << pPerIoData->socketClient);
-
-			// 准备单句柄数据
-			LPPER_HANDLE_DATA perHdlData = (LPPER_HANDLE_DATA)GlobalAlloc(GPTR, sizeof(PER_HANDLE_DATA));
-			perHdlData->socketClient = pPerIoData->socketClient;
-			memcpy(&perHdlData->clientAddr, remote, remoteLen);
+				<< "> come in, data: " << pPerIoData->buf << " len = " << pPerIoData->bytesRecv
+				<< " bytesTransferred = " << bytesTransferred
+				<< ", socket: " << pPerIoData->socketClient);
 
 			//
-			HANDLE hdl = CreateIoCompletionPort((HANDLE)perHdlData->socketClient, CompletionPort_, (ULONG_PTR)perHdlData, 0);
-			if (NULL == hdl)
+			if (EXE_SUCCESS != PostRecvOnAccept(pPerIoData))
 			{
-				LOG_ERROR("CreateIoCompletionPort WSAError: " << WSAGetLastError() << ", error: " << GetLastError());
+				LOG_ERROR("Post recv failed, thread :" << std::this_thread::get_id());
 				closesocket(pPerIoData->socketClient);
 				GlobalFree(pPerIoData);
-				GlobalFree(perHdlData);
 			}
-			else
-			{
-				//
-				memset(pPerIoData, 0, sizeof(PER_IO_OPERATE_DATA));
-				pPerIoData->dataBuf.buf = pPerIoData->buf;
-				pPerIoData->dataBuf.len = DATA_BUFSIZE;
-				pPerIoData->bufLen = DATA_BUFSIZE;
-				pPerIoData->operationType = RECV_POSTED;
-				WSARecv(perHdlData->socketClient, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
-					&pPerIoData->overlapped, NULL);
-
-	
-			}		
 
 			//	
 			if (EXE_SUCCESS != PostAccept())
@@ -235,26 +231,52 @@ void BaseServer::ServerWorkerThread()
 				LOG_ERROR("PostAccept failed, thread:" << std::this_thread::get_id());
 			}
 		}
-		else if (pPerIoData->operationType == RECV_POSTED)
+		else if (pPerIoData->operationType == RECV_OPE)
 		{
 			// deal the data received.
-			LOG_DEBUG("recv data: " << pPerIoData->buf << " from socket: " << pPerHdlData->socketClient);
+			//LOG_DEBUG("recv data: " << pPerIoData->buf << " len = " << pPerIoData->bytesRecv 
+				//<< " bytesTransferred = " << bytesTransferred  << " from socket: " << pPerHdlData->socketClient);
 
-			//
-			pPerIoData->operationType = SEND_POSTED;
-			const char *rsp = "hello client";
-			memcpy(pPerIoData->buf, rsp, strlen(rsp) + 1);
-			WSASend(pPerHdlData->socketClient, &pPerIoData->dataBuf, 1, &pPerIoData->bytesSend, 0,
-				&pPerIoData->overlapped, NULL);
-			LOG_INFO("post a WSASend operation.");
+			// deal the data received.
+			int leftLen = DATA_RECV_BUFSIZE - pPerHdlData->dataLen;
+			if (leftLen < bytesTransferred)
+			{
+				LOG_ERROR("Left space of buffer is not enough.");
+				assert(0);
+				closesocket(pPerIoData->socketClient);
+				GlobalFree(pPerIoData);
+				GlobalFree(pPerHdlData);
+			}
+			else
+			{
+				//
+				memcpy(pPerHdlData->buf + pPerHdlData->dataLen, pPerIoData->buf, bytesTransferred);
+				pPerHdlData->dataLen += bytesTransferred;
+
+				//
+				if (EXE_SUCCESS != OnReceiveData(pPerHdlData))
+				{
+					LOG_ERROR("receive data error.");
+					closesocket(pPerHdlData->socketClient);
+					GlobalFree(pPerHdlData);
+					GlobalFree(pPerIoData);
+				}
+				else
+				{
+					//
+					if (EXE_SUCCESS != PostRecvOnRecv(pPerIoData))
+					{
+						LOG_ERROR("PostRecvOnRecv failed.");
+						closesocket(pPerIoData->socketClient);
+						GlobalFree(pPerIoData);
+						GlobalFree(pPerHdlData);
+					}
+				}
+			}
 		}
-		else if (pPerIoData->operationType == SEND_POSTED)
+		else if (pPerIoData->operationType == SEND_OPE)
 		{
-			//
-			pPerIoData->operationType = RECV_POSTED;
-			WSARecv(pPerHdlData->socketClient, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
-				&pPerIoData->overlapped, NULL);
-			LOG_INFO("post a WSARecv operation.");
+
 		}
 		else
 		{
@@ -278,13 +300,13 @@ int BaseServer::PostAccept()
 	pPerIoData->dataBuf.buf = pPerIoData->buf;
 	pPerIoData->dataBuf.len = DATA_BUFSIZE;
 	pPerIoData->bufLen = DATA_BUFSIZE;
-	pPerIoData->operationType = ACCEPT_POSTED;
+	pPerIoData->operationType = ACCEPT_OPE;
 	pPerIoData->socketClient = acceptSocket;
 
 	//
 	DWORD dwBytes = 0;
 	BOOL bRetVal = lpfnAcceptEx_(listenSocket_, acceptSocket, pPerIoData->buf,
-		pPerIoData->bufLen - ((sizeof(sockaddr_in) + 16) * 2), // the actual receive data at the beginning of the buffer
+		0, //pPerIoData->bufLen - ((sizeof(sockaddr_in) + 16) * 2), // the actual receive data at the beginning of the buffer
 		sizeof(sockaddr_in) + 16,
 		sizeof(sockaddr_in) + 16,
 		&dwBytes, &pPerIoData->overlapped);
@@ -300,4 +322,158 @@ int BaseServer::PostAccept()
 	}
 	//
 	return EXE_SUCCESS;
+}
+
+int BaseServer::PostRecvOnAccept(LPPER_IO_OPERATE_DATA pPerIoData)
+{
+	if (NULL == pPerIoData)
+	{
+		LOG_ERROR("PER_IO_OPERATE_DATA is empty.");
+		assert(0);
+		return EXE_FAIL;
+	}
+	//
+	SOCKET socket = pPerIoData->socketClient;
+
+	// 准备单句柄数据
+	LPPER_HANDLE_DATA perHdlData = (LPPER_HANDLE_DATA)GlobalAlloc(GPTR, sizeof(PER_HANDLE_DATA));
+	perHdlData->socketClient = socket;
+	perHdlData->dataLen = 0;
+
+	//
+	HANDLE hdl = CreateIoCompletionPort((HANDLE)perHdlData->socketClient, CompletionPort_, (ULONG_PTR)perHdlData, 0);
+	if (NULL == hdl)
+	{
+		LOG_ERROR("CreateIoCompletionPort WSAError: " << WSAGetLastError() << ", error: " << GetLastError());
+		GlobalFree(perHdlData);
+		return EXE_FAIL;
+	}
+	else
+	{
+		//
+		memset(pPerIoData, 0, sizeof(PER_IO_OPERATE_DATA));
+		pPerIoData->socketClient = socket;
+		pPerIoData->dataBuf.buf = pPerIoData->buf;
+		pPerIoData->dataBuf.len = DATA_BUFSIZE;
+		pPerIoData->bufLen = DATA_BUFSIZE;
+		pPerIoData->operationType = RECV_OPE;
+		int retVal = WSARecv(socket, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
+			&pPerIoData->overlapped, NULL);
+		if (retVal == SOCKET_ERROR)
+		{
+			int error = WSAGetLastError();
+			if (WSA_IO_PENDING != error)
+			{
+				LOG_ERROR("WSARecv error: " << error);
+				assert(0);
+				GlobalFree(perHdlData);
+				return EXE_FAIL;
+			}
+		}
+	}
+	//
+	return EXE_SUCCESS;
+}
+
+int BaseServer::PostRecvOnRecv(LPPER_IO_OPERATE_DATA pPerIoData)
+{
+	//
+	if (NULL == pPerIoData)
+	{
+		LOG_ERROR("LPPER_IO_OPERATE_DATA is empty.");
+		assert(0);
+		return EXE_FAIL;
+	}
+	//
+	SOCKET socket = pPerIoData->socketClient;
+
+	//
+	memset(pPerIoData, 0, sizeof(PER_IO_OPERATE_DATA));
+	pPerIoData->socketClient = socket;
+	pPerIoData->operationType = RECV_OPE;
+	pPerIoData->dataBuf.buf = pPerIoData->buf;
+	pPerIoData->dataBuf.len = DATA_BUFSIZE;
+	pPerIoData->bufLen = DATA_BUFSIZE;
+	int retVal = WSARecv(socket, &pPerIoData->dataBuf, 1, &pPerIoData->bytesRecv, &pPerIoData->flags,
+		&pPerIoData->overlapped, NULL);
+	if (SOCKET_ERROR == retVal)
+	{
+		int error = WSAGetLastError();
+		if (WSA_IO_PENDING != error)
+		{
+			LOG_ERROR("WSARecv error: " << error);
+			assert(0);
+			return EXE_FAIL;
+		}
+	}
+	//
+	return EXE_SUCCESS;
+}
+
+int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
+{
+	if (NULL == pPerHdlData)
+	{
+		assert(0);
+		return EXE_FAIL;
+	}
+
+	//
+	int retVal = EXE_SUCCESS;
+	MSG_LEN_TYPE msgLen = 0;
+	while (pPerHdlData->dataLen >= DATA_HEAD_LEN)
+	{
+		msgLen = ntohl(*reinterpret_cast<MSG_LEN_TYPE*>(pPerHdlData->buf));
+		if (msgLen < 0 || msgLen > MSG_MAX_LEN)
+		{
+			LOG_ERROR("Invalid msg length: " << msgLen);
+			assert(0);
+			retVal = EXE_FAIL;
+			break;
+		}
+		else
+		{
+			int headMsgLen = DATA_HEAD_LEN + msgLen;
+			if (pPerHdlData->dataLen >= headMsgLen)
+			{
+				char headMsgBuffer[DATA_RECV_BUFSIZE];
+				memset(headMsgBuffer, 0, DATA_RECV_BUFSIZE);
+				char leftBuffer[DATA_RECV_BUFSIZE];
+				memset(leftBuffer, 0, DATA_RECV_BUFSIZE);
+
+				//
+				int leftLen = DATA_RECV_BUFSIZE - headMsgLen;
+				memcpy(headMsgBuffer, pPerHdlData->buf, headMsgLen);
+				memcpy(leftBuffer, pPerHdlData->buf + headMsgLen, leftLen);
+
+				//
+				memset(pPerHdlData->buf, 0, DATA_RECV_BUFSIZE);
+				memcpy(pPerHdlData->buf, leftBuffer, leftLen);
+
+				//
+				pPerHdlData->dataLen -= headMsgLen;
+
+				//
+				TransByteOrder(headMsgBuffer, headMsgLen);
+
+				// test
+				struct Data{
+					int len;
+					char buf[4];
+				};
+				Data*pData = (Data*)headMsgBuffer;
+				LOG_INFO("recv data, length =  " << pData->len << " data = " << pData->buf);
+
+				//
+				retVal = EXE_SUCCESS;
+			}
+			else
+			{
+				retVal = EXE_SUCCESS;
+				break;
+			}
+		}
+	} // end while
+	//
+	return retVal;
 }
