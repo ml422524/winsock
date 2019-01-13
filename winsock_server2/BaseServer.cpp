@@ -454,15 +454,7 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 				pPerHdlData->dataLen -= headMsgLen;
 
 				//
-				TransByteOrder(headMsgBuffer, headMsgLen);
-
-				// test
-				struct Data{
-					int len;
-					char buf[4];
-				};
-				Data*pData = (Data*)headMsgBuffer;
-				LOG_INFO("recv data, length =  " << pData->len << " data = " << pData->buf);
+				LOG_INFO("recv string: " << (headMsgBuffer + DATA_HEAD_LEN));
 
 				//
 				retVal = EXE_SUCCESS;
