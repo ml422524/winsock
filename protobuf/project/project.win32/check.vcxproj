@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{AE00E712-AE83-354D-B89D-9047BB562585}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>check</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+    <PropertyGroup>
+      <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+      <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>E:\ml\winsock\protobuf\project\project.win32;E:\ml\winsock\protobuf\project\src;E:\ml\winsock\protobuf\project\gmock;E:\ml\winsock\protobuf\project\gmock\gtest;E:\ml\winsock\protobuf\project\gmock\gtest\include;E:\ml\winsock\protobuf\project\gmock\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>E:\ml\winsock\protobuf\project\project.win32;E:\ml\winsock\protobuf\project\src;E:\ml\winsock\protobuf\project\gmock;E:\ml\winsock\protobuf\project\gmock\gtest;E:\ml\winsock\protobuf\project\gmock\gtest\include;E:\ml\winsock\protobuf\project\gmock\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>E:\ml\winsock\protobuf\project\project.win32;E:\ml\winsock\protobuf\project\src;E:\ml\winsock\protobuf\project\gmock;E:\ml\winsock\protobuf\project\gmock\gtest;E:\ml\winsock\protobuf\project\gmock\gtest\include;E:\ml\winsock\protobuf\project\gmock\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <Midl>
+      <AdditionalIncludeDirectories>E:\ml\winsock\protobuf\project\project.win32;E:\ml\winsock\protobuf\project\src;E:\ml\winsock\protobuf\project\gmock;E:\ml\winsock\protobuf\project\gmock\gtest;E:\ml\winsock\protobuf\project\gmock\gtest\include;E:\ml\winsock\protobuf\project\gmock\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" -HE:/ml/winsock/protobuf/project/cmake -BE:/ml/winsock/protobuf/project/project.win32 --check-stamp-file E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCCompiler.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCXXCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeRCCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeDependentOption.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindThreads.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckLibraryExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckSymbolExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckIncludeFile.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageMessage.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeParseArguments.cmake;E:\ml\winsock\protobuf\project\cmake\extract_includes.bat.in;E:\ml\winsock\protobuf\project\cmake\libprotobuf-lite.cmake;E:\ml\winsock\protobuf\project\cmake\libprotobuf.cmake;E:\ml\winsock\protobuf\project\cmake\libprotoc.cmake;E:\ml\winsock\protobuf\project\cmake\protoc.cmake;E:\ml\winsock\protobuf\project\cmake\tests.cmake;E:\ml\winsock\protobuf\project\cmake\install.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\GNUInstallDirs.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-lite.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-config.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-config-version.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-module.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" -HE:/ml/winsock/protobuf/project/cmake -BE:/ml/winsock/protobuf/project/project.win32 --check-stamp-file E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCCompiler.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCXXCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeRCCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeDependentOption.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindThreads.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckLibraryExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckSymbolExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckIncludeFile.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageMessage.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeParseArguments.cmake;E:\ml\winsock\protobuf\project\cmake\extract_includes.bat.in;E:\ml\winsock\protobuf\project\cmake\libprotobuf-lite.cmake;E:\ml\winsock\protobuf\project\cmake\libprotobuf.cmake;E:\ml\winsock\protobuf\project\cmake\libprotoc.cmake;E:\ml\winsock\protobuf\project\cmake\protoc.cmake;E:\ml\winsock\protobuf\project\cmake\tests.cmake;E:\ml\winsock\protobuf\project\cmake\install.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\GNUInstallDirs.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-lite.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-config.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-config-version.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-module.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" -HE:/ml/winsock/protobuf/project/cmake -BE:/ml/winsock/protobuf/project/project.win32 --check-stamp-file E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCCompiler.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCXXCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeRCCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeDependentOption.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindThreads.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckLibraryExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckSymbolExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckIncludeFile.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageMessage.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeParseArguments.cmake;E:\ml\winsock\protobuf\project\cmake\extract_includes.bat.in;E:\ml\winsock\protobuf\project\cmake\libprotobuf-lite.cmake;E:\ml\winsock\protobuf\project\cmake\libprotobuf.cmake;E:\ml\winsock\protobuf\project\cmake\libprotoc.cmake;E:\ml\winsock\protobuf\project\cmake\protoc.cmake;E:\ml\winsock\protobuf\project\cmake\tests.cmake;E:\ml\winsock\protobuf\project\cmake\install.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\GNUInstallDirs.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-lite.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-config.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-config-version.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-module.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+"D:\Program Files (x86)\CMake\bin\cmake.exe" -HE:/ml/winsock/protobuf/project/cmake -BE:/ml/winsock/protobuf/project/project.win32 --check-stamp-file E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInitialize.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCCompiler.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeCXXCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeSystemSpecificInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeGenericSystem.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\WindowsPaths.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-C.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\3.6.1\CMakeRCCompiler.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeRCInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCXXInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeLanguageInformation.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Compiler\MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\Platform\Windows-MSVC.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeCommonLanguageInclude.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeDependentOption.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindThreads.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckLibraryExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckSymbolExists.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CheckIncludeFile.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageHandleStandardArgs.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\FindPackageMessage.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\CMakeParseArguments.cmake;E:\ml\winsock\protobuf\project\cmake\extract_includes.bat.in;E:\ml\winsock\protobuf\project\cmake\libprotobuf-lite.cmake;E:\ml\winsock\protobuf\project\cmake\libprotobuf.cmake;E:\ml\winsock\protobuf\project\cmake\libprotoc.cmake;E:\ml\winsock\protobuf\project\cmake\protoc.cmake;E:\ml\winsock\protobuf\project\cmake\tests.cmake;E:\ml\winsock\protobuf\project\cmake\install.cmake;D:\Program Files (x86)\CMake\share\cmake-3.6\Modules\GNUInstallDirs.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-lite.pc.cmake;E:\ml\winsock\protobuf\project\cmake\protobuf-config.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-config-version.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-module.cmake.in;E:\ml\winsock\protobuf\project\cmake\protobuf-options.cmake;E:\ml\winsock\protobuf\project\cmake\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\29627db0b39ce5722547c0b88d99c0b6\check.rule">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+cd E:\ml\winsock\protobuf\project
+if %errorlevel% neq 0 goto :cmEnd
+E:
+if %errorlevel% neq 0 goto :cmEnd
+E:\ml\winsock\protobuf\project\project.win32\Debug\tests.exe
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/29627db0b39ce5722547c0b88d99c0b6/check.rule;E:\ml\winsock\protobuf\project\project.win32\Debug\tests.exe;E:\ml\winsock\protobuf\project\project.win32\Debug\test_plugin.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\check</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+cd E:\ml\winsock\protobuf\project
+if %errorlevel% neq 0 goto :cmEnd
+E:
+if %errorlevel% neq 0 goto :cmEnd
+E:\ml\winsock\protobuf\project\project.win32\Release\tests.exe
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/29627db0b39ce5722547c0b88d99c0b6/check.rule;E:\ml\winsock\protobuf\project\project.win32\Release\tests.exe;E:\ml\winsock\protobuf\project\project.win32\Release\test_plugin.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\check</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+cd E:\ml\winsock\protobuf\project
+if %errorlevel% neq 0 goto :cmEnd
+E:
+if %errorlevel% neq 0 goto :cmEnd
+E:\ml\winsock\protobuf\project\project.win32\MinSizeRel\tests.exe
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/29627db0b39ce5722547c0b88d99c0b6/check.rule;E:\ml\winsock\protobuf\project\project.win32\MinSizeRel\tests.exe;E:\ml\winsock\protobuf\project\project.win32\MinSizeRel\test_plugin.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\check</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'"></Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+cd E:\ml\winsock\protobuf\project
+if %errorlevel% neq 0 goto :cmEnd
+E:
+if %errorlevel% neq 0 goto :cmEnd
+E:\ml\winsock\protobuf\project\project.win32\RelWithDebInfo\tests.exe
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/29627db0b39ce5722547c0b88d99c0b6/check.rule;E:\ml\winsock\protobuf\project\project.win32\RelWithDebInfo\tests.exe;E:\ml\winsock\protobuf\project\project.win32\RelWithDebInfo\test_plugin.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\check</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="E:\ml\winsock\protobuf\project\project.win32\CMakeFiles\check" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="E:/ml/winsock/protobuf/project/project.win32/ZERO_CHECK.vcxproj">
+      <Project>2D1544B1-C82C-39C9-A6DC-F5AB3870A134</Project>
+    </ProjectReference>
+    <ProjectReference Include="E:/ml/winsock/protobuf/project/project.win32/test_plugin.vcxproj">
+      <Project>9D00B8A8-F246-3EBF-BDE3-C949DDDDE275</Project>
+    </ProjectReference>
+    <ProjectReference Include="E:/ml/winsock/protobuf/project/project.win32/tests.vcxproj">
+      <Project>0A6B43B7-751C-3362-BAFF-EF8ADEA43817</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

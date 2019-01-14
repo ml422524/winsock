@@ -1,0 +1,46 @@
+# CMake generation dependency list for this directory.
+E:/ml/winsock/protobuf/project/cmake/CMakeLists.txt
+E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/3.6.1/CMakeSystem.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeSystemSpecificInitialize.cmake
+E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/3.6.1/CMakeCCompiler.cmake
+E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/3.6.1/CMakeCXXCompiler.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeSystemSpecificInformation.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeGenericSystem.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Platform/Windows.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Platform/WindowsPaths.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeCInformation.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeLanguageInformation.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Platform/Windows-MSVC-C.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Platform/Windows-MSVC.cmake
+E:/ml/winsock/protobuf/project/project.win32/CMakeFiles/3.6.1/CMakeRCCompiler.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeRCInformation.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeCommonLanguageInclude.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeCXXInformation.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeLanguageInformation.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Compiler/MSVC-CXX.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Platform/Windows-MSVC-CXX.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/Platform/Windows-MSVC.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeCommonLanguageInclude.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeDependentOption.cmake
+E:/ml/winsock/protobuf/project/cmake/protobuf-options.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/FindThreads.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CheckLibraryExists.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CheckSymbolExists.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CheckIncludeFile.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/FindPackageHandleStandardArgs.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/FindPackageMessage.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/CMakeParseArguments.cmake
+E:/ml/winsock/protobuf/project/cmake/extract_includes.bat.in
+E:/ml/winsock/protobuf/project/cmake/libprotobuf-lite.cmake
+E:/ml/winsock/protobuf/project/cmake/libprotobuf.cmake
+E:/ml/winsock/protobuf/project/cmake/libprotoc.cmake
+E:/ml/winsock/protobuf/project/cmake/protoc.cmake
+E:/ml/winsock/protobuf/project/cmake/tests.cmake
+E:/ml/winsock/protobuf/project/cmake/install.cmake
+D:/Program Files (x86)/CMake/share/cmake-3.6/Modules/GNUInstallDirs.cmake
+E:/ml/winsock/protobuf/project/cmake/protobuf.pc.cmake
+E:/ml/winsock/protobuf/project/cmake/protobuf-lite.pc.cmake
+E:/ml/winsock/protobuf/project/cmake/protobuf-config.cmake.in
+E:/ml/winsock/protobuf/project/cmake/protobuf-config-version.cmake.in
+E:/ml/winsock/protobuf/project/cmake/protobuf-module.cmake.in
+E:/ml/winsock/protobuf/project/cmake/protobuf-options.cmake
