@@ -420,11 +420,11 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 
 	//
 	int retVal = EXE_SUCCESS;
-	MSG_LEN_TYPE msgLen = 0;
+	DATA_LEN_TYPE msgLen = 0;
 	while (pPerHdlData->dataLen >= DATA_HEAD_LEN)
 	{
-		msgLen = ntohl(*reinterpret_cast<MSG_LEN_TYPE*>(pPerHdlData->buf));
-		if (msgLen < 0 || msgLen > MSG_MAX_LEN)
+		msgLen = ntohl(*reinterpret_cast<DATA_LEN_TYPE*>(pPerHdlData->buf));
+		if (msgLen < 0 || msgLen > DATA_MAX_LEN)
 		{
 			LOG_ERROR("Invalid msg length: " << msgLen);
 			assert(0);

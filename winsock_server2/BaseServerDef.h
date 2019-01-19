@@ -5,13 +5,13 @@
 #include <MSWSock.h>
 
 //
-typedef u_long MSG_LEN_TYPE;
+typedef u_long DATA_LEN_TYPE;
 
 //
-#define DATA_HEAD_LEN     sizeof(MSG_LEN_TYPE)
+#define DATA_HEAD_LEN     sizeof(DATA_LEN_TYPE)
 #define DATA_BUFSIZE      512
-#define MSG_MAX_LEN       (2 * DATA_BUFSIZE)
-#define DATA_RECV_BUFSIZE (MSG_MAX_LEN + DATA_HEAD_LEN)
+#define DATA_MAX_LEN       (2 * DATA_BUFSIZE)
+#define DATA_RECV_BUFSIZE (DATA_MAX_LEN + DATA_HEAD_LEN)
 
 //typedef char BYTE;
 //typedef char *PBYTE;
