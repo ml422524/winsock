@@ -454,7 +454,11 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 				pPerHdlData->dataLen -= headMsgLen;
 
 				//
-				LOG_INFO("recv string: " << (headMsgBuffer + DATA_HEAD_LEN));
+				std::string typeName;
+				ParseTypeName(headMsgBuffer, typeName);
+				LOG_INFO("recv type of " << typeName);
+				std::vector<char> binProto;
+				ParseBinProto(headMsgBuffer, binProto);
 
 				//
 				retVal = EXE_SUCCESS;
@@ -468,4 +472,59 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 	} // end while
 	//
 	return retVal;
+}
+
+//
+int BaseServer::ParseCheckSum(const char*buf, int checkSum) const
+{
+	if (NULL == buf){
+		assert(0);
+		return EXE_FAIL;
+	}
+	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(buf);
+	checkSum = ntohl(msgHead->checkSum);
+	//
+	return EXE_SUCCESS;
+}
+int BaseServer::ParseTypeName(const char*buf, std::string&typeName) const
+{
+	if (NULL == buf){
+		assert(0);
+		return EXE_FAIL;
+	}
+	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(buf);
+	const int nameLen = ntohl(msgHead->nameLen);
+	if (nameLen <= 0 || nameLen >= TYPENAME_LEN){
+		assert(0);
+		return EXE_FAIL;
+	}
+	//
+	std::string tname(msgHead->name, 0, nameLen);
+	typeName = std::move(tname);
+
+	//
+	return EXE_SUCCESS;
+}
+int BaseServer::ParseBinProto(const char*src, std::vector<char>&binProto) const
+{
+	if (NULL == src){
+		assert(0);
+		return EXE_FAIL;
+	}
+	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(src);
+	const int msgLen = ntohl(msgHead->msgLen);
+	const int binProtoLen = msgLen - sizeof(MsgHead) + DATA_HEAD_LEN;
+	if (binProtoLen <= 0){
+		assert(0);
+		return EXE_FAIL;
+	}	
+	std::vector<char> vec(binProtoLen);
+	assert(vec.size() == binProtoLen);
+
+	//
+	const char *pBinProto = src + sizeof(MsgHead);
+	std::copy(pBinProto, pBinProto + binProtoLen, vec.begin());
+	//
+	binProto = std::move(vec);
+	return EXE_SUCCESS;
 }

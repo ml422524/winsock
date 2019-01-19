@@ -12,6 +12,15 @@ typedef u_long DATA_LEN_TYPE;
 #define DATA_BUFSIZE      512
 #define DATA_MAX_LEN       (2 * DATA_BUFSIZE)
 #define DATA_RECV_BUFSIZE (DATA_MAX_LEN + DATA_HEAD_LEN)
+#define TYPENAME_LEN 32
+
+//
+struct MsgHead{
+	DATA_LEN_TYPE msgLen;
+	int nameLen;
+	char name[TYPENAME_LEN];
+	int checkSum; // a check  value of protobuf data.
+};
 
 //typedef char BYTE;
 //typedef char *PBYTE;

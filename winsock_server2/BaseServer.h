@@ -22,6 +22,11 @@ private:
 	int PostRecvOnRecv(LPPER_IO_OPERATE_DATA);
 
 	//
+	int ParseCheckSum(const char*buf, int checkSum) const;
+	int ParseTypeName(const char*buf, std::string&typeName) const;
+	int ParseBinProto(const char*src, std::vector<char>&binProto) const;
+
+	//
 	HANDLE CompletionPort_;
 	WSADATA wsd_;
 	SYSTEM_INFO systemInfo_;
