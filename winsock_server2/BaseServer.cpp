@@ -581,7 +581,18 @@ int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto
 	//
 	MessagePtr msgPtr(protoType->New());
     msgPtr->ParseFromString(binProto);
-	dispatcher_[msgPtr->GetDescriptor()](msgPtr);
+	auto it = dispatcher_.find(msgPtr->GetDescriptor());
+	if (it != dispatcher_.end())
+	{
+		it->second(msgPtr);
+	}
+	else
+	{
+		if (defaultCallBack_)
+		{
+			defaultCallBack_(msgPtr);
+		}
+	}
 
 	//
 	return EXE_SUCCESS;

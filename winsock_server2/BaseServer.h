@@ -56,6 +56,7 @@ private:
 
 	//
 	std::map<const Descriptor*, std::function<void(std::shared_ptr<Message>)>> dispatcher_;
+	std::function<void(std::shared_ptr<Message>)> defaultCallBack_;
 };
 
 //
