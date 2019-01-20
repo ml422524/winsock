@@ -454,11 +454,17 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 				pPerHdlData->dataLen -= headMsgLen;
 
 				//
+				int msgLen = 0;
+				ParseMsgLen(headMsgBuffer, msgLen);
 				std::string typeName;
 				ParseTypeName(headMsgBuffer, typeName);
-				LOG_INFO("recv type of " << typeName);
+				int checkSum = -1;
+				ParseCheckSum(headMsgBuffer, checkSum);
 				std::vector<char> binProto;
 				ParseBinProto(headMsgBuffer, binProto);
+
+				//
+				LOG_INFO("recv: msgLen = " << msgLen << ", type = " << typeName << ", checkSum = " << checkSum);
 
 				//
 				retVal = EXE_SUCCESS;
@@ -473,15 +479,27 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 	//
 	return retVal;
 }
-
 //
-int BaseServer::ParseCheckSum(const char*buf, int checkSum) const
+int BaseServer::ParseMsgLen(const char * buf, int&msgLen) const
 {
 	if (NULL == buf){
 		assert(0);
 		return EXE_FAIL;
 	}
-	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(buf);
+	DATA_LEN_TYPE*pLen = (DATA_LEN_TYPE*)(buf);
+	msgLen = ntohl(*pLen);
+	//
+	return EXE_SUCCESS;
+}
+//
+int BaseServer::ParseCheckSum(const char*buf, int& checkSum) const
+{
+	if (NULL == buf){
+		assert(0);
+		return EXE_FAIL;
+	}
+	const char *msgBuf = buf + DATA_HEAD_LEN;
+	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(msgBuf);
 	checkSum = ntohl(msgHead->checkSum);
 	//
 	return EXE_SUCCESS;
@@ -492,7 +510,8 @@ int BaseServer::ParseTypeName(const char*buf, std::string&typeName) const
 		assert(0);
 		return EXE_FAIL;
 	}
-	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(buf);
+	const char *msgBuf = buf + DATA_HEAD_LEN;
+	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(msgBuf);
 	const int nameLen = ntohl(msgHead->nameLen);
 	if (nameLen <= 0 || nameLen >= TYPENAME_LEN){
 		assert(0);
@@ -511,10 +530,14 @@ int BaseServer::ParseBinProto(const char*src, std::vector<char>&binProto) const
 		assert(0);
 		return EXE_FAIL;
 	}
-	const MsgHead*msgHead = reinterpret_cast<const MsgHead*>(src);
-	const int msgLen = ntohl(msgHead->msgLen);
-	const int binProtoLen = msgLen - sizeof(MsgHead) + DATA_HEAD_LEN;
-	if (binProtoLen <= 0){
+	int msgLen = 0;
+	if (EXE_SUCCESS != ParseMsgLen(src, msgLen))
+	{
+		assert(0);
+		return EXE_FAIL;
+	}
+	const int binProtoLen = msgLen - sizeof(MsgHead);
+	if (binProtoLen < 0){ // allow the actual data is empty.
 		assert(0);
 		return EXE_FAIL;
 	}	
@@ -522,7 +545,7 @@ int BaseServer::ParseBinProto(const char*src, std::vector<char>&binProto) const
 	assert(vec.size() == binProtoLen);
 
 	//
-	const char *pBinProto = src + sizeof(MsgHead);
+	const char *pBinProto = src + DATA_HEAD_LEN + sizeof(MsgHead);
 	std::copy(pBinProto, pBinProto + binProtoLen, vec.begin());
 	//
 	binProto = std::move(vec);

@@ -16,7 +16,6 @@ typedef u_long DATA_LEN_TYPE;
 
 //
 struct MsgHead{
-	DATA_LEN_TYPE msgLen;
 	int nameLen;
 	char name[TYPENAME_LEN];
 	int checkSum; // a check  value of protobuf data.

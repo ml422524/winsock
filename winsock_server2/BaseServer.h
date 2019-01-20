@@ -22,7 +22,8 @@ private:
 	int PostRecvOnRecv(LPPER_IO_OPERATE_DATA);
 
 	//
-	int ParseCheckSum(const char*buf, int checkSum) const;
+	int ParseMsgLen(const char * buf, int&msgLen) const;
+	int ParseCheckSum(const char*buf, int& checkSum) const;
 	int ParseTypeName(const char*buf, std::string&typeName) const;
 	int ParseBinProto(const char*src, std::vector<char>&binProto) const;
 
