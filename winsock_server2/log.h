@@ -18,5 +18,6 @@ public:
 #define LOG_TRACE(logEvent) LOG4CPLUS_TRACE(Log::root, logEvent)
 #define LOG_DEBUG(logEvent) LOG4CPLUS_DEBUG(Log::root, logEvent)
 #define LOG_INFO(logEvent)  LOG4CPLUS_INFO(Log::root, logEvent)
+#define LOG_WARN(logEvent)  LOG4CPLUS_WARN(Log::root, logEvent)
 #define LOG_ERROR(logEvent) LOG4CPLUS_ERROR(Log::root, logEvent)
 #define LOG_FATAL(logEvent) LOG4CPLUS_FATAL(Log::root, logEvent)

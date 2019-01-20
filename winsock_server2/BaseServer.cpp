@@ -2,6 +2,7 @@
 #include "BaseServer.h"
 #include "log.h"
 #include "proto/msg.pb.h"
+#include "log.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -9,7 +10,8 @@ int BaseServer::Init(const char *fileName)
 {
 	// register callback functions.
 	RegisterMessageCallBack<Protocol::Hello>(std::bind(&BaseServer::OnHello, this, std::placeholders::_1));
-	RegisterMessageCallBack<Protocol::GetName>(std::bind(&BaseServer::OnGetName, this, std::placeholders::_1));
+	//RegisterMessageCallBack<Protocol::GetName>(std::bind(&BaseServer::OnGetName, this, std::placeholders::_1));
+	RegisterDefaultMessageCallBack(std::bind(&BaseServer::OnDefault, this, std::placeholders::_1));
 
 	// initialize net, thread, etc.
 	WSADATA wsd;
@@ -580,7 +582,21 @@ int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto
 
 	//
 	MessagePtr msgPtr(protoType->New());
-    msgPtr->ParseFromString(binProto);
+	if (!msgPtr)
+	{
+		LOG_ERROR("create an instance of proto type failed.");
+		assert(0);
+		return EXE_FAIL;
+	}
+
+	//
+	if (!msgPtr->ParseFromString(binProto))
+	{
+		LOG_ERROR("Parse String failed.");
+		return EXE_FAIL;
+	}
+
+	//
 	auto it = dispatcher_.find(msgPtr->GetDescriptor());
 	if (it != dispatcher_.end())
 	{
@@ -591,6 +607,10 @@ int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto
 		if (defaultCallBack_)
 		{
 			defaultCallBack_(msgPtr);
+		}
+		else
+		{
+			LOG_WARN("May forget to register a callback function.");
 		}
 	}
 
@@ -608,4 +628,8 @@ void BaseServer::OnGetName(MessagePtr ptr)
 {
 	auto p = std::dynamic_pointer_cast<Protocol::GetName>(ptr);
 	LOG_INFO("recv request: " << p->userid() << ", " << p->sex());
+}
+void BaseServer::OnDefault(MessagePtr ptr)
+{
+	LOG_INFO("call default callback function of type: " << ptr->GetTypeName());
 }

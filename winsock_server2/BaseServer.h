@@ -4,6 +4,7 @@
 #include <thread>
 #include "BaseServerDef.h"
 #include "proto/msg.pb.h"
+#include "BaseErrorCode.h"
 
 class BaseServer{
 public:
@@ -17,8 +18,9 @@ public:
 	int Deinit();
 
 	//
-	void OnHello(std::shared_ptr<Message> ptr);
-	void OnGetName(std::shared_ptr<Message> ptr);
+	void OnHello(MessagePtr ptr);
+	void OnGetName(MessagePtr ptr);
+	void OnDefault(MessagePtr ptr);
 private:
 	//
 	void ServerWorkerThread();
@@ -41,6 +43,7 @@ private:
 	//
 	template<typename _MessageType>
 	int RegisterMessageCallBack(std::function<void(std::shared_ptr<Message>)> cb);
+	int RegisterDefaultMessageCallBack(std::function<void(MessagePtr)> cb);
 
 	//
 	HANDLE CompletionPort_;
@@ -73,4 +76,10 @@ int BaseServer::RegisterMessageCallBack(std::function<void(std::shared_ptr<Messa
 	dispatcher_[descriptor] = cb;
 	//
 	return CALL_BACK_REG_SUCCESS;
+}
+
+inline int BaseServer::RegisterDefaultMessageCallBack(std::function<void(MessagePtr)> cb)
+{
+	defaultCallBack_ = cb;
+	return EXE_SUCCESS;
 }
