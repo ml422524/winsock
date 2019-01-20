@@ -49,3 +49,10 @@ typedef struct _PER_IO_OPERATE_DATA{
 	int operationType;
 	SOCKET socketClient;
 }PER_IO_OPERATE_DATA, *LPPER_IO_OPERATE_DATA;
+
+//
+enum CallBackErrorCode{
+	CALL_BACK_EXIST = 0,
+	CALL_BACK_REG_SUCCESS
+};
+

@@ -1,11 +1,17 @@
 #include "BaseErrorCode.h"
 #include "BaseServer.h"
 #include "log.h"
+#include "proto/msg.pb.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
 int BaseServer::Init(const char *fileName)
 {
+	// register callback functions.
+	RegisterMessageCallBack<Protocol::Hello>(std::bind(&BaseServer::OnHello, this, std::placeholders::_1));
+	RegisterMessageCallBack<Protocol::GetName>(std::bind(&BaseServer::OnGetName, this, std::placeholders::_1));
+
+	// initialize net, thread, etc.
 	WSADATA wsd;
 	if (NO_ERROR != WSAStartup(MAKEWORD(2, 2), &wsd))
 	{			
@@ -460,11 +466,14 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 				ParseTypeName(headMsgBuffer, typeName);
 				int checkSum = -1;
 				ParseCheckSum(headMsgBuffer, checkSum);
-				std::vector<char> binProto;
+				std::string binProto;
 				ParseBinProto(headMsgBuffer, binProto);
 
 				//
 				LOG_INFO("recv: msgLen = " << msgLen << ", type = " << typeName << ", checkSum = " << checkSum);
+
+				//
+				OnMessage(typeName, binProto);
 
 				//
 				retVal = EXE_SUCCESS;
@@ -524,7 +533,7 @@ int BaseServer::ParseTypeName(const char*buf, std::string&typeName) const
 	//
 	return EXE_SUCCESS;
 }
-int BaseServer::ParseBinProto(const char*src, std::vector<char>&binProto) const
+int BaseServer::ParseBinProto(const char*src, std::string&binProto) const
 {
 	if (NULL == src){
 		assert(0);
@@ -541,7 +550,7 @@ int BaseServer::ParseBinProto(const char*src, std::vector<char>&binProto) const
 		assert(0);
 		return EXE_FAIL;
 	}	
-	std::vector<char> vec(binProtoLen);
+	std::string vec(binProtoLen, '\0');
 	assert(vec.size() == binProtoLen);
 
 	//
@@ -550,4 +559,42 @@ int BaseServer::ParseBinProto(const char*src, std::vector<char>&binProto) const
 	//
 	binProto = std::move(vec);
 	return EXE_SUCCESS;
+}
+
+//
+int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto)
+{
+	//
+	auto descriptor = ::google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(typeName);
+	if (NULL == descriptor){
+		assert(0);
+		return EXE_FAIL;
+	}
+
+	//
+	auto protoType = ::google::protobuf::MessageFactory::generated_factory()->GetPrototype(descriptor);
+	if (NULL == protoType){
+		assert(0);
+		return EXE_FAIL;
+	}
+
+	//
+	MessagePtr msgPtr(protoType->New());
+    msgPtr->ParseFromString(binProto);
+	dispatcher_[msgPtr->GetDescriptor()](msgPtr);
+
+	//
+	return EXE_SUCCESS;
+}
+
+//
+void BaseServer::OnHello(MessagePtr ptr)
+{
+	auto p = std::dynamic_pointer_cast<Protocol::Hello>(ptr);
+	LOG_INFO("recv request: " << p->content());
+}
+void BaseServer::OnGetName(MessagePtr ptr)
+{
+	auto p = std::dynamic_pointer_cast<Protocol::GetName>(ptr);
+	LOG_INFO("recv request: " << p->userid() << ", " << p->sex());
 }

@@ -1,20 +1,31 @@
 #pragma once
 
-#include "BaseServerDef.h"
 #include <vector>
 #include <thread>
+#include "BaseServerDef.h"
+#include "proto/msg.pb.h"
 
 class BaseServer{
 public:
+	//
+	typedef ::google::protobuf::Message Message;
+	typedef ::google::protobuf::Descriptor Descriptor;
+	typedef std::shared_ptr<Message> MessagePtr;
+
 	//
 	int Init(const char *fileName);
 	int Deinit();
 
 	//
-	void ServerWorkerThread();
+	void OnHello(std::shared_ptr<Message> ptr);
+	void OnGetName(std::shared_ptr<Message> ptr);
 private:
 	//
+	void ServerWorkerThread();
+
+	//
 	int OnReceiveData(LPPER_HANDLE_DATA);
+	int OnMessage(const std::string&typeName, const std::string&binProto);
 
 	//
 	int PostAccept();
@@ -25,7 +36,11 @@ private:
 	int ParseMsgLen(const char * buf, int&msgLen) const;
 	int ParseCheckSum(const char*buf, int& checkSum) const;
 	int ParseTypeName(const char*buf, std::string&typeName) const;
-	int ParseBinProto(const char*src, std::vector<char>&binProto) const;
+	int ParseBinProto(const char*src, std::string&binProto) const;
+
+	//
+	template<typename _MessageType>
+	int RegisterMessageCallBack(std::function<void(std::shared_ptr<Message>)> cb);
 
 	//
 	HANDLE CompletionPort_;
@@ -38,4 +53,23 @@ private:
 	//
 	LPFN_ACCEPTEX lpfnAcceptEx_;
 	LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockAddrs_;
+
+	//
+	std::map<const Descriptor*, std::function<void(std::shared_ptr<Message>)>> dispatcher_;
 };
+
+//
+template<typename _MessageType>
+int BaseServer::RegisterMessageCallBack(std::function<void(std::shared_ptr<Message>)> cb)
+{
+	const Descriptor*descriptor = _MessageType::descriptor();
+	auto it = dispatcher_.find(descriptor);
+	if (it != dispatcher_.end())
+	{
+		assert(0);
+		return CALL_BACK_EXIST;
+	}
+	dispatcher_[descriptor] = cb;
+	//
+	return CALL_BACK_REG_SUCCESS;
+}
