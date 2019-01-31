@@ -5,6 +5,7 @@
 #include "BaseServerDef.h"
 #include "proto/msg.pb.h"
 #include "BaseErrorCode.h"
+#include "Connection.h"
 
 class BaseServer{
 public:
@@ -12,27 +13,32 @@ public:
 	typedef ::google::protobuf::Message Message;
 	typedef ::google::protobuf::Descriptor Descriptor;
 	typedef std::shared_ptr<Message> MessagePtr;
+	typedef std::function<void(const ConnectionPtr& conPtr, std::shared_ptr<Message>)> CallBack;
 
 	//
 	int Init(const char *fileName);
 	int Deinit();
 
 	//
-	void OnHello(MessagePtr ptr);
-	void OnGetName(MessagePtr ptr);
-	void OnDefault(MessagePtr ptr);
+	void OnHello(const ConnectionPtr& conPtr, MessagePtr ptr);
+	void OnGetName(const ConnectionPtr& conPtr, MessagePtr ptr);
+	void OnDefault(const ConnectionPtr& conPtr, MessagePtr ptr);
+
+	//
+	int Notify(const ConnectionPtr& conPtr, const std::string&protoName, const void*data, const int dataLen);
 private:
 	//
 	void ServerWorkerThread();
 
 	//
 	int OnReceiveData(LPPER_HANDLE_DATA);
-	int OnMessage(const std::string&typeName, const std::string&binProto);
+	int OnMessage(const ConnectionPtr& conPtr, const std::string&typeName, const std::string&binProto);
 
 	//
 	int PostAccept();
 	int PostRecvOnAccept(LPPER_IO_OPERATE_DATA);
 	int PostRecvOnRecv(LPPER_IO_OPERATE_DATA);
+	int PostSend(LPPER_IO_OPERATE_DATA);
 
 	//
 	int ParseMsgLen(const char * buf, int&msgLen) const;
@@ -42,8 +48,8 @@ private:
 
 	//
 	template<typename _MessageType>
-	int RegisterMessageCallBack(std::function<void(std::shared_ptr<Message>)> cb);
-	int RegisterDefaultMessageCallBack(std::function<void(MessagePtr)> cb);
+	int RegisterMessageCallBack(CallBack cb);
+	int RegisterDefaultMessageCallBack(CallBack cb);
 
 	//
 	HANDLE CompletionPort_;
@@ -58,13 +64,13 @@ private:
 	LPFN_GETACCEPTEXSOCKADDRS lpfnGetAcceptExSockAddrs_;
 
 	//
-	std::map<const Descriptor*, std::function<void(std::shared_ptr<Message>)>> dispatcher_;
-	std::function<void(std::shared_ptr<Message>)> defaultCallBack_;
+	std::map<const Descriptor*, CallBack> dispatcher_;
+	CallBack defaultCallBack_;
 };
 
 //
 template<typename _MessageType>
-int BaseServer::RegisterMessageCallBack(std::function<void(std::shared_ptr<Message>)> cb)
+int BaseServer::RegisterMessageCallBack(CallBack cb)
 {
 	const Descriptor*descriptor = _MessageType::descriptor();
 	auto it = dispatcher_.find(descriptor);
@@ -78,7 +84,7 @@ int BaseServer::RegisterMessageCallBack(std::function<void(std::shared_ptr<Messa
 	return CALL_BACK_REG_SUCCESS;
 }
 
-inline int BaseServer::RegisterDefaultMessageCallBack(std::function<void(MessagePtr)> cb)
+inline int BaseServer::RegisterDefaultMessageCallBack(CallBack cb)
 {
 	defaultCallBack_ = cb;
 	return EXE_SUCCESS;

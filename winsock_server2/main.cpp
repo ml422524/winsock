@@ -4,6 +4,10 @@
 int main(int argc, char*argv[])
 {
 	//
+	assert(sizeof(u_long) == sizeof(int));
+	assert(sizeof(u_long) == 4);
+
+	//
 	Log::InitLog();
 
 	//

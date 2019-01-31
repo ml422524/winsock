@@ -9,9 +9,9 @@
 int BaseServer::Init(const char *fileName)
 {
 	// register callback functions.
-	RegisterMessageCallBack<Protocol::Hello>(std::bind(&BaseServer::OnHello, this, std::placeholders::_1));
-	//RegisterMessageCallBack<Protocol::GetName>(std::bind(&BaseServer::OnGetName, this, std::placeholders::_1));
-	RegisterDefaultMessageCallBack(std::bind(&BaseServer::OnDefault, this, std::placeholders::_1));
+	RegisterMessageCallBack<Protocol::Hello>(std::bind(&BaseServer::OnHello, this, std::placeholders::_1, std::placeholders::_2));
+	//RegisterMessageCallBack<Protocol::GetName>(std::bind(&BaseServer::OnGetName, this, std::placeholders::_1,  std::placeholders::_2));
+	RegisterDefaultMessageCallBack(std::bind(&BaseServer::OnDefault, this, std::placeholders::_1, std::placeholders::_2));
 
 	// initialize net, thread, etc.
 	WSADATA wsd;
@@ -284,7 +284,7 @@ void BaseServer::ServerWorkerThread()
 		}
 		else if (pPerIoData->operationType == SEND_OPE)
 		{
-
+			LOG_DEBUG("send ope: " << bytesTransferred);
 		}
 		else
 		{
@@ -418,6 +418,21 @@ int BaseServer::PostRecvOnRecv(LPPER_IO_OPERATE_DATA pPerIoData)
 	return EXE_SUCCESS;
 }
 
+int BaseServer::PostSend(LPPER_IO_OPERATE_DATA pPerIoData)
+{
+	int retVal = WSASend(pPerIoData->socketClient, &pPerIoData->dataBuf, 1, &pPerIoData->bytesSend, 0, &pPerIoData->overlapped,
+		NULL);
+	if (SOCKET_ERROR == retVal)
+	{
+		auto error = WSAGetLastError();
+		if (WSA_IO_PENDING != error)
+		{
+			return EXE_FAIL;
+		}
+	}
+	return EXE_SUCCESS;
+}
+
 int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 {
 	if (NULL == pPerHdlData)
@@ -475,7 +490,8 @@ int BaseServer::OnReceiveData(LPPER_HANDLE_DATA pPerHdlData)
 				LOG_INFO("recv: msgLen = " << msgLen << ", type = " << typeName << ", checkSum = " << checkSum);
 
 				//
-				OnMessage(typeName, binProto);
+				ConnectionPtr conPtr(new Connection(pPerHdlData->socketClient));
+				OnMessage(conPtr, typeName, binProto);
 
 				//
 				retVal = EXE_SUCCESS;
@@ -564,7 +580,7 @@ int BaseServer::ParseBinProto(const char*src, std::string&binProto) const
 }
 
 //
-int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto)
+int BaseServer::OnMessage(const ConnectionPtr& conPtr, const std::string&typeName, const std::string&binProto)
 {
 	//
 	auto descriptor = ::google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(typeName);
@@ -600,13 +616,13 @@ int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto
 	auto it = dispatcher_.find(msgPtr->GetDescriptor());
 	if (it != dispatcher_.end())
 	{
-		it->second(msgPtr);
+		it->second(conPtr, msgPtr);
 	}
 	else
 	{
 		if (defaultCallBack_)
 		{
-			defaultCallBack_(msgPtr);
+			defaultCallBack_(conPtr, msgPtr);
 		}
 		else
 		{
@@ -619,17 +635,95 @@ int BaseServer::OnMessage(const std::string&typeName, const std::string&binProto
 }
 
 //
-void BaseServer::OnHello(MessagePtr ptr)
+int BaseServer::Notify(const ConnectionPtr& conPtr, const std::string&protoName, const void*data, const int dataLen)
+{
+	//
+	assert(dataLen + DATA_HEAD_LEN + sizeof(MsgHead) <= DATA_BUFSIZE);
+	//
+	if (!conPtr)
+	{
+		assert(0);
+		return EXE_FAIL;
+	}
+	auto descriptor = ::google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(protoName);
+	if (NULL == descriptor){
+		assert(0);
+		return EXE_FAIL;
+	}
+	if (!data)
+	{
+		assert(0);
+		return EXE_FAIL;
+	}
+	if(dataLen + DATA_HEAD_LEN + sizeof(MsgHead) > DATA_BUFSIZE)
+	{
+		assert(0);
+		return EXE_FAIL;
+	}
+
+	//
+	if (protoName.size() > TYPENAME_LEN)
+	{
+		assert(0);
+		return EXE_FAIL;
+	}
+
+	//
+	LPPER_IO_OPERATE_DATA pPerIoData = new PER_IO_OPERATE_DATA;
+	std::memset(pPerIoData, 0, sizeof(PER_IO_OPERATE_DATA));
+
+	//
+	DATA_LEN_TYPE nwDataLen = htonl(dataLen);
+	std::memcpy(pPerIoData->buf, &nwDataLen, sizeof(nwDataLen));
+	pPerIoData->bufLen += sizeof(nwDataLen);
+
+	//
+	MsgHead msgHead;
+	std::memset(&msgHead, 0, sizeof(msgHead));
+	msgHead.checkSum = htonl(0);
+	std::memcpy(msgHead.name, protoName.c_str(), protoName.size());
+	msgHead.nameLen = htonl(protoName.size());
+	std::memcpy(pPerIoData->buf + pPerIoData->bufLen, &msgHead, sizeof(msgHead));
+	pPerIoData->bufLen += sizeof(msgHead);
+
+	//
+	std::memcpy(pPerIoData->buf + pPerIoData->bufLen, data, dataLen);
+	pPerIoData->bufLen += dataLen;
+
+	//
+	pPerIoData->socketClient = conPtr->GetSocket();
+	pPerIoData->operationType = SEND_OPE;
+	pPerIoData->dataBuf.buf = pPerIoData->buf;
+	pPerIoData->dataBuf.len = pPerIoData->bufLen;
+
+	//
+	if (EXE_SUCCESS != PostSend(pPerIoData))
+	{
+		delete pPerIoData;
+		return EXE_FAIL;
+	}
+	//
+	return EXE_SUCCESS;
+}
+
+//
+void BaseServer::OnHello(const ConnectionPtr& conPtr, MessagePtr ptr)
 {
 	auto p = std::dynamic_pointer_cast<Protocol::Hello>(ptr);
 	LOG_INFO("recv request: " << p->content());
+
+	//
+	const char* str = "hello world";
+	const int strLen = strlen(str);
+	std::string protoName = Protocol::Hello::descriptor()->full_name();
+	Notify(conPtr, protoName, str, strLen);
 }
-void BaseServer::OnGetName(MessagePtr ptr)
+void BaseServer::OnGetName(const ConnectionPtr& conPtr, MessagePtr ptr)
 {
 	auto p = std::dynamic_pointer_cast<Protocol::GetName>(ptr);
 	LOG_INFO("recv request: " << p->userid() << ", " << p->sex());
 }
-void BaseServer::OnDefault(MessagePtr ptr)
+void BaseServer::OnDefault(const ConnectionPtr& conPtr, MessagePtr ptr)
 {
 	LOG_INFO("call default callback function of type: " << ptr->GetTypeName());
 }
