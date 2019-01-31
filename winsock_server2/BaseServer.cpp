@@ -283,7 +283,38 @@ void BaseServer::ServerWorkerThread()
 		}
 		else if (pPerIoData->operationType == SEND_OPE)
 		{
-			LOG_DEBUG("send ope: " << bytesTransferred);
+			if (bytesTransferred == pPerIoData->bufLen)
+			{
+				LOG_DEBUG("socket: " << pPerIoData->socketClient << " send ope completion");
+			}
+			else if(bytesTransferred < pPerIoData->bufLen)
+			{				
+				char leftData[DATA_BUFSIZE];
+				std::memset(leftData, 0, DATA_BUFSIZE);
+				//
+				const int leftDataLen = pPerIoData->bufLen - bytesTransferred;
+				std::memcpy(leftData, pPerIoData->buf + bytesTransferred, leftDataLen);
+				SOCKET sock = pPerHdlData->socketClient;
+				//
+				std::memset(pPerIoData, 0, sizeof(LPPER_IO_OPERATE_DATA));
+				//
+				pPerIoData->socketClient = sock;
+				std::memcpy(pPerIoData->buf, leftData, leftDataLen);
+				pPerIoData->bufLen = leftDataLen;
+				pPerIoData->dataBuf.buf = pPerIoData->buf;
+				pPerIoData->dataBuf.len = pPerIoData->bufLen;
+				pPerIoData->operationType = SEND_OPE;
+				//
+				if (EXE_SUCCESS != PostSend(pPerIoData))
+				{
+					GlobalFree(pPerIoData);
+				}
+			}
+			else
+			{
+				assert(0);
+				GlobalFree(pPerIoData);
+			}
 		}
 		else
 		{
@@ -668,8 +699,7 @@ int BaseServer::Notify(const ConnectionPtr& conPtr, const std::string&protoName,
 	}
 
 	//
-	LPPER_IO_OPERATE_DATA pPerIoData = new PER_IO_OPERATE_DATA;
-	std::memset(pPerIoData, 0, sizeof(PER_IO_OPERATE_DATA));
+	LPPER_IO_OPERATE_DATA pPerIoData = (LPPER_IO_OPERATE_DATA)GlobalAlloc(GPTR, sizeof(PER_IO_OPERATE_DATA));
 
 	//
 	DATA_LEN_TYPE nwDataLen = htonl(dataLen);
@@ -698,7 +728,7 @@ int BaseServer::Notify(const ConnectionPtr& conPtr, const std::string&protoName,
 	//
 	if (EXE_SUCCESS != PostSend(pPerIoData))
 	{
-		delete pPerIoData;
+		GlobalFree(pPerIoData);
 		return EXE_FAIL;
 	}
 	//
