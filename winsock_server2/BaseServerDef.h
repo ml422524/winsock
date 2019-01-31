@@ -8,11 +8,11 @@
 typedef u_long DATA_LEN_TYPE;
 
 //
-#define DATA_HEAD_LEN     sizeof(DATA_LEN_TYPE)
-#define DATA_BUFSIZE      (1024*8)
-#define DATA_MAX_LEN       (2 * DATA_BUFSIZE)
-#define DATA_RECV_BUFSIZE (DATA_MAX_LEN + DATA_HEAD_LEN)
-#define TYPENAME_LEN 32
+#define DATA_HEAD_LEN       sizeof(DATA_LEN_TYPE)
+#define DATA_MAX_LEN        (2048)
+#define DATA_RECV_BUFSIZE   (DATA_MAX_LEN + DATA_HEAD_LEN)
+#define TYPENAME_LEN        (32)
+#define DATA_BUFSIZE        (1024)
 
 //
 struct MsgHead{
