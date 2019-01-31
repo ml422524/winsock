@@ -161,10 +161,9 @@ int BaseServer::Init(const char *fileName)
 	return EXE_SUCCESS;
 }
 
-int BaseServer::Deinit()
+BaseServer::~BaseServer()
 {
 	WSACleanup();
-	return EXE_SUCCESS;
 }
 
 //

@@ -16,8 +16,11 @@ public:
 	typedef std::function<void(const ConnectionPtr& conPtr, std::shared_ptr<Message>)> CallBack;
 
 	//
+	BaseServer() {}
+	~BaseServer();
+
+	//
 	int Init(const char *fileName);
-	int Deinit();
 
 	//
 	void OnHello(const ConnectionPtr& conPtr, MessagePtr ptr);

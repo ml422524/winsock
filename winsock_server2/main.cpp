@@ -21,8 +21,5 @@ int main(int argc, char*argv[])
 	}
 
 	//
-	svr.Deinit();
-
-	//
 	return 0;
 }
