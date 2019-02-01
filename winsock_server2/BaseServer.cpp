@@ -189,7 +189,38 @@ void BaseServer::ServerWorkerThread()
 		if (FALSE == ret)
 		{
 			LOG_ERROR("GetQueuedCompletionStatus return 0, error: " << WSAGetLastError());
-			continue;
+			//
+			DWORD dwErr = WSAGetLastError(); 
+			if (WAIT_TIMEOUT == dwErr)
+			{
+				// confirm whether the client is alive or not.
+				if (!IsSocketAlive(pPerHdlData->socketClient))
+				{
+					closesocket(pPerHdlData->socketClient);
+					GlobalFree(pPerHdlData);
+					GlobalFree(pPerIoData);
+					continue;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			//
+			else if (ERROR_NETNAME_DELETED == dwErr)
+			{
+				closesocket(pPerHdlData->socketClient);
+				GlobalFree(pPerHdlData);
+				GlobalFree(pPerIoData);
+				continue;
+			}
+			else
+			{
+				closesocket(pPerHdlData->socketClient);
+				GlobalFree(pPerHdlData);
+				GlobalFree(pPerIoData);
+				continue;
+			}
 		}
 
 		//
@@ -286,6 +317,7 @@ void BaseServer::ServerWorkerThread()
 			if (bytesTransferred == pPerIoData->bufLen)
 			{
 				LOG_DEBUG("socket: " << pPerIoData->socketClient << " send ope completion");
+				GlobalFree(pPerIoData);
 			}
 			else if(bytesTransferred < pPerIoData->bufLen)
 			{				
@@ -662,6 +694,15 @@ int BaseServer::OnMessage(const ConnectionPtr& conPtr, const std::string&typeNam
 
 	//
 	return EXE_SUCCESS;
+}
+
+//
+BOOL BaseServer::IsSocketAlive(SOCKET sock)
+{
+	int nByteSent = ::send(sock, "", 0, 0);
+	if (SOCKET_ERROR == nByteSent)
+		return FALSE;
+	return TRUE;
 }
 
 //

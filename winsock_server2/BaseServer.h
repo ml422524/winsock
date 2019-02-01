@@ -50,6 +50,9 @@ private:
 	int ParseBinProto(const char*src, std::string&binProto) const;
 
 	//
+	BOOL IsSocketAlive(SOCKET sock);
+
+	//
 	template<typename _MessageType>
 	int RegisterMessageCallBack(CallBack cb);
 	int RegisterDefaultMessageCallBack(CallBack cb);
