@@ -3,7 +3,7 @@
 #include <vector>
 #include <thread>
 #include "BaseServerDef.h"
-#include "proto/msg.pb.h"
+#include "../proto/msg.pb.h"
 #include "BaseErrorCode.h"
 #include "Connection.h"
 

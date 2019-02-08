@@ -1,7 +1,7 @@
 #include "BaseErrorCode.h"
 #include "BaseServer.h"
 #include "log.h"
-#include "proto/msg.pb.h"
+#include "../proto/msg.pb.h"
 #include "log.h"
 
 #pragma comment(lib, "ws2_32.lib")
