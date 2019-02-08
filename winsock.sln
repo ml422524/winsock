@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winsock_server", "winsock_s
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winsock_server2", "winsock_server2\winsock_server2.vcxproj", "{08BF2C93-B22B-4F43-9BF1-455C6356545D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winsock_client_sync_event", "winsock_client_sync_event\winsock_client_sync_event.vcxproj", "{B48D45CC-0BF6-436B-B0C3-5886B9BF6B6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -33,6 +35,10 @@ Global
 		{08BF2C93-B22B-4F43-9BF1-455C6356545D}.Debug|Win32.Build.0 = Debug|Win32
 		{08BF2C93-B22B-4F43-9BF1-455C6356545D}.Release|Win32.ActiveCfg = Release|Win32
 		{08BF2C93-B22B-4F43-9BF1-455C6356545D}.Release|Win32.Build.0 = Release|Win32
+		{B48D45CC-0BF6-436B-B0C3-5886B9BF6B6B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B48D45CC-0BF6-436B-B0C3-5886B9BF6B6B}.Debug|Win32.Build.0 = Debug|Win32
+		{B48D45CC-0BF6-436B-B0C3-5886B9BF6B6B}.Release|Win32.ActiveCfg = Release|Win32
+		{B48D45CC-0BF6-436B-B0C3-5886B9BF6B6B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
