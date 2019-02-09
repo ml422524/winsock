@@ -1,9 +1,72 @@
 #include "BaseClient.h"
 #include <cstdio>
 #include <assert.h>
+#include "../proto/msg.pb.h"
 
 //
 #pragma comment(lib, "ws2_32.lib")
+
+//
+typedef u_long DATA_LEN_TYPE;
+#define DATA_HEAD_LEN     sizeof(DATA_LEN_TYPE)
+#define DATA_BUFSIZE      512
+#define DATA_MAX_LEN       (2 * DATA_BUFSIZE)
+#define DATA_RECV_BUFSIZE (DATA_MAX_LEN + DATA_HEAD_LEN)
+#define TYPENAME_LEN 32
+struct MsgHead{
+	int nameLen;
+	char name[TYPENAME_LEN];
+	int checkSum; // a check  value of protobuf data.
+};
+
+int sendHelloProto(SOCKET sSocket)
+{
+	//
+	Protocol::Hello hello;
+	hello.set_content("helloserver");
+	std::string  typeName = Protocol::Hello::descriptor()->full_name();
+
+	//
+	std::string buffer;
+	hello.SerializeToString(&buffer);
+
+	//
+	Protocol::Hello parseHello;
+	parseHello.ParseFromString(buffer);
+
+	//
+	MsgHead head;
+	head.nameLen = typeName.size();
+	strcpy(head.name, typeName.c_str());
+	head.name[head.nameLen] = '\0';
+	head.checkSum = 10;
+
+	//
+	head.nameLen = htonl(head.nameLen);
+	head.checkSum = htonl(head.checkSum);
+
+	//
+	const int msgLen = sizeof(head) + buffer.size();
+	const int totalLen = DATA_HEAD_LEN + msgLen;
+	char *pdata = new char[totalLen];
+
+	//
+	const int netMsgLen = htonl(msgLen);
+	memcpy(pdata, &netMsgLen, DATA_HEAD_LEN);
+	memcpy(pdata + DATA_HEAD_LEN, &head, sizeof(head));
+	memcpy(pdata + DATA_HEAD_LEN + sizeof(head), buffer.c_str(), buffer.size());
+
+	//
+	int bytes = send(sSocket, pdata, totalLen, 0);
+	if (SOCKET_ERROR == bytes){
+		printf("send failed");
+	}
+	//
+	delete pdata;
+
+	//
+	return 0;
+}
 
 //
 int BaseClient::Init(const char* configFile)
@@ -94,6 +157,7 @@ int BaseClient::DoLoop()
 					else
 					{
 						printf("FD_CONNECT success.\n");
+						sendHelloProto(svrSocket_);
 					}
 				}
 				else if (wsaNetworkEvent.lNetworkEvents & FD_CLOSE)
@@ -115,7 +179,22 @@ int BaseClient::DoLoop()
 					}
 					else
 					{
-						printf("FD_READ success.\n");
+						const int bufLen = 1024;
+						char buf[bufLen];
+						ZeroMemory(buf, sizeof(buf));
+						int bytes = recv(svrSocket_, buf, bufLen, 0);
+						if (bytes == SOCKET_ERROR)
+						{
+							printf("recv data error: %d.\n", WSAGetLastError());
+						}
+						else
+						{	
+							// decode the received data.
+
+							//
+							printf("FD_READ success, recv %d bytes.\n", bytes);
+						}
+
 					}
 				}
 				else if (wsaNetworkEvent.lNetworkEvents & FD_WRITE)
@@ -126,6 +205,9 @@ int BaseClient::DoLoop()
 					}
 					else
 					{
+						// do write operation.
+
+						//
 						printf("FD_WRITE success.\n");
 					}
 				}
