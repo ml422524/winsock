@@ -194,9 +194,9 @@ void BaseServer::ServerWorkerThread()
 			if (WAIT_TIMEOUT == dwErr)
 			{
 				// confirm whether the client is alive or not.
-				if (!IsSocketAlive(pPerHdlData->socketClient))
+				if (!IsSocketAlive(pPerIoData->socketClient))
 				{
-					closesocket(pPerHdlData->socketClient);
+					closesocket(pPerIoData->socketClient);
 					GlobalFree(pPerHdlData);
 					GlobalFree(pPerIoData);
 					continue;
@@ -209,14 +209,14 @@ void BaseServer::ServerWorkerThread()
 			//
 			else if (ERROR_NETNAME_DELETED == dwErr)
 			{
-				closesocket(pPerHdlData->socketClient);
+				closesocket(pPerIoData->socketClient);
 				GlobalFree(pPerHdlData);
 				GlobalFree(pPerIoData);
 				continue;
 			}
 			else
 			{
-				closesocket(pPerHdlData->socketClient);
+				closesocket(pPerIoData->socketClient);
 				GlobalFree(pPerHdlData);
 				GlobalFree(pPerIoData);
 				continue;
